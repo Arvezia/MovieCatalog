@@ -14,6 +14,7 @@ import com.naufaldy.moviecatalog.databinding.FragmentMovieBinding
 import com.naufaldy.moviecatalog.databinding.FragmentTvBinding
 import com.naufaldy.moviecatalog.viewmodel.MovieViewModel
 import com.naufaldy.moviecatalog.viewmodel.TVViewModel
+import com.naufaldy.moviecatalog.viewmodel.ViewModelFactory
 
 
 class TVFragment : Fragment() {
@@ -30,11 +31,12 @@ class TVFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null){
-            val viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[TVViewModel::class.java]
-            val tvshows = viewModel.getTVShows()
-
+            val factory = ViewModelFactory.getInstance(requireActivity())
+            val viewModel = ViewModelProvider(this, factory)[TVViewModel::class.java]
             val tvAdapter = TVAdapter()
-            tvAdapter.setTVList(tvshows)
+            viewModel.getTVShows().observe(viewLifecycleOwner,{tvshows ->
+                tvAdapter.setTVList(tvshows)
+            })
 
             with(fragmentTvBinding.rvTv){
                 layoutManager = LinearLayoutManager(context)

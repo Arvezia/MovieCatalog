@@ -26,10 +26,10 @@ class TVDetailActivity : AppCompatActivity() {
 
         val extras =intent.extras
         if(extras != null){
-            val tvId = extras.getString(TVDetailActivity.EXTRA_TV)
+            val tvId = extras.getInt(TVDetailActivity.EXTRA_TV)
             if (tvId != null){
                 viewModel.selectedTVShows(tvId)
-                gettv(viewModel.getTVShows() as TvEntity)
+                gettv(viewModel.getTVDetail() as TvEntity)
             }
         }
     }

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,15 +14,11 @@ import com.naufaldy.moviecatalog.adapter.MovieAdapter
 import com.naufaldy.moviecatalog.databinding.FragmentMovieBinding
 import com.naufaldy.moviecatalog.databinding.MovieListMenuBinding
 import com.naufaldy.moviecatalog.viewmodel.MovieViewModel
+import com.naufaldy.moviecatalog.viewmodel.ViewModelFactory
 
 class MovieFragment : Fragment() {
     private lateinit var fragmentActivityBinding: FragmentMovieBinding
 
-
-/*    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,12 +30,15 @@ class MovieFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (activity != null){
-            val viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[MovieViewModel::class.java]
-            val movies = viewModel.getMovieShows()
 
+        if (activity != null){
+            val factory = ViewModelFactory.getInstance(requireActivity())
+            val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
             val movieAdapter = MovieAdapter()
-            movieAdapter.setMovieList(movies)
+
+            viewModel.getMovieShows().observe(viewLifecycleOwner,Observer {movieList ->
+                movieAdapter.setMovieList(movieList)
+            })
 
             with(fragmentActivityBinding.rvMovie){
                 layoutManager = LinearLayoutManager(context)

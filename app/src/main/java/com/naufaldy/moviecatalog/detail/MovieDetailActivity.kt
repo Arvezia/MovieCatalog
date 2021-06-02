@@ -11,6 +11,7 @@ import com.naufaldy.moviecatalog.adapter.MovieDetailAdapter
 import com.naufaldy.moviecatalog.databinding.ActivityMovieDetailBinding
 import com.naufaldy.moviecatalog.entity.MovieEntity
 import com.naufaldy.moviecatalog.viewmodel.MovieDetailViewModel
+import com.naufaldy.moviecatalog.viewmodel.ViewModelFactory
 
 class MovieDetailActivity : AppCompatActivity() {
 
@@ -24,14 +25,15 @@ class MovieDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //val adapter = MovieAdapter()
-        val viewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory())[MovieDetailViewModel::class.java]
+        val factory = ViewModelFactory.getInstance(this)
+        val viewModel = ViewModelProvider(this, factory)[MovieDetailViewModel::class.java]
 
         val extras =intent.extras
         if(extras != null){
-            val movieId = extras.getString(EXTRA_MOVIE)
+            val movieId = extras.getInt(EXTRA_MOVIE)
             if (movieId != null){
                 viewModel.selectedMovie(movieId)
-                getMovie(viewModel.getMovie() as MovieEntity)
+                getMovie(viewModel.getMovieDetail() as MovieEntity)
             }
         }
     }
